@@ -1,0 +1,18 @@
+﻿<Window x:Class="NsccSystem.SecondWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="NSCC System - Second Window" Height="300" Width="520"
+        WindowStartupLocation="CenterOwner"
+        Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="53*"/>
+            <ColumnDefinition Width="12*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="126,0,0,0">
+            <TextBlock Margin="0,0,0,12" Text="This is the Second Window" FontSize="22" FontWeight="SemiBold" Foreground="#333"
+                       HorizontalAlignment="Center"/>
+            <Button Content="Close" Width="100" Height="30" Click="Close_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,16 +1,27 @@
-# Visual Studio
+# Visual Studio caches
 .vs/
 
-# Build
+# Build artifacts (any depth)
 **/bin/
 **/obj/
+**/log/
 
-# User files
+# User-specific
 *.user
 *.rsuser
 *.suo
 *.userosscache
+*.sln.docstates
 
 # IDE
 .vscode/
 .idea/
+
+# Publish / dist
+**/publish/
+**/dist/
+
+# OS
+Thumbs.db
+Desktop.ini
+``
