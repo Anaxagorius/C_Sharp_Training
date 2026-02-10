@@ -1,0 +1,891 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UAP • NHI • Psi — Tracking Dashboard</title>
+<meta name="description" content="Cross-check UAP/NHI community claims with official sources; daily digest; evidence capture; space-weather context." />
+
+<!-- ====== MODERN, RESPONSIVE, ACCESSIBLE STYLE ====== -->
+<style>
+:root{
+  --bg:#0b0f14; --panel:#111721; --muted:#7b8794; --text:#e7efff; --brand:#59b0ff;
+  --accent:#a6e3a1; --warn:#ffcc66; --danger:#ff6b6b; --ok:#59d38c;
+  --chip:#1b2431; --ring:#2c3a50; --card:#0f141c; --shadow:0 8px 28px rgba(0,0,0,.25);
+  --font:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:linear-gradient(180deg,var(--bg),#0a0e13 55%, #070a0e);
+  color:var(--text); font-family:var(--font); line-height:1.45;
+}
+header{
+  position:sticky; top:0; z-index:10; backdrop-filter:blur(10px);
+  background:rgba(10,14,19,.7); border-bottom:1px solid #142034;
+}
+.container{max-width:1200px; margin:0 auto; padding:1rem;}
+.brand{display:flex; align-items:center; gap:.75rem}
+.brand .logo{width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--brand),#6fd6ff); box-shadow:var(--shadow)}
+h1{font-size:1.25rem; margin:.1rem 0}
+.topbar{
+  display:flex; gap:1rem; align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+.actions{display:flex; gap:.5rem; flex-wrap:wrap}
+button, .btn{
+  appearance:none; border:1px solid #254261; background:#0f1722; color:var(--text);
+  padding:.6rem .9rem; border-radius:.6rem; cursor:pointer; transition:.2s transform, .2s background;
+}
+button:hover{transform:translateY(-1px); background:#122033}
+.btn.run{background:linear-gradient(135deg,var(--brand),#6fd6ff); color:#05121d; border:none; font-weight:600}
+.btn.save{background:linear-gradient(135deg,#59d38c,#9fe8bf); color:#06130e; border:none; font-weight:600}
+.badge{
+  display:inline-flex; align-items:center; gap:.5rem; background:var(--chip); color:#b8c7da;
+  padding:.3rem .55rem; border-radius:.5rem; font-size:.85rem; border:1px solid #233042;
+}
+.grid{
+  display:grid; gap:1rem; grid-template-columns:repeat(12, 1fr);
+}
+.card{
+  background:linear-gradient(180deg,var(--panel),var(--card));
+  border:1px solid #1d2a3e; border-radius:14px; box-shadow:var(--shadow); overflow:hidden;
+}
+.card h2{font-size:1rem; letter-spacing:.02em; margin:0; padding:1rem; border-bottom:1px solid #152238}
+.card .body{padding:1rem}
+.tabs{display:flex; gap:.4rem; flex-wrap:wrap}
+.tab-btn{
+  background:#0e1520;border:1px solid #1e2c41;color:#b5c9e2;padding:.45rem .7rem;border-radius:.55rem;cursor:pointer
+}
+.tab-btn[aria-selected="true"]{background:#0f2237;color:#e7f3ff;border-color:#234562}
+.section{display:none}
+.section.active{display:block}
+ul.items{list-style:none; padding:0; margin:0; display:grid; gap:.6rem}
+.item{
+  padding:.75rem; border:1px solid #1d2c45; border-radius:.65rem; background:#0c131d;
+  display:grid; gap:.4rem;
+}
+.item .meta{display:flex; gap:.5rem; flex-wrap:wrap; color:#9db0c5; font-size:.85rem}
+.item a{color:#8fd3ff; text-decoration:none}
+.item a:hover{text-decoration:underline}
+.chips{display:flex; flex-wrap:wrap; gap:.4rem}
+.chip{background:#112033;border:1px solid #1d334f;color:#a5c7e7; padding:.2rem .45rem; border-radius:.4rem; font-size:.8rem}
+.kp{font-weight:700}
+.kp.hot{color:#ffb86b}
+.kp.veryhot{color:#ff6b6b}
+.input-row{display:grid; gap:.5rem; grid-template-columns:repeat(12, 1fr); align-items:center}
+.input-row > *{grid-column:span 12}
+@media(min-width:720px){
+  .input-row > .col-6{grid-column:span 6}
+  .input-row > .col-4{grid-column:span 4}
+  .input-row > .col-3{grid-column:span 3}
+  .input-row > .col-8{grid-column:span 8}
+  .input-row > .col-9{grid-column:span 9}
+  .input-row > .col-12{grid-column:span 12}
+}
+label{font-size:.9rem;color:#a7bad1}
+input[type="text"], input[type="email"], input[type="datetime-local"], input[type="number"], textarea, select{
+  width:100%; border:1px solid #203149; background:#0a1220; color:#e6f0ff; border-radius:.5rem; padding:.6rem .7rem
+}
+textarea{min-height:110px}
+.helper{font-size:.85rem;color:#8aa3bf}
+footer{padding:2rem 0; color:#8ea6bf}
+kbd{background:#0e1622; border:1px solid #1c2a42; padding:.15rem .35rem; border-radius:.35rem}
+.hr{height:1px; background:#17253b; margin:1rem 0}
+.alert{padding:.6rem .8rem; border-radius:.5rem; background:#162338; border:1px solid #234061; color:#bfe1ff}
+.alert.warn{background:#2c2415; border-color:#5d4722; color:#ffdca8}
+.alert.good{background:#142a1c; border-color:#265d3a; color:#c7f6df}
+table{width:100%; border-collapse:collapse}
+th, td{border-bottom:1px solid #1a2b45; padding:.55rem .6rem; text-align:left}
+th{color:#a0bad9; background:#0f1a2a; position:sticky; top:0}
+.code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+.small{font-size:.9rem}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="container topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>UAP • NHI • Psi — Tracking Dashboard</h1>
+        <div class="small" aria-live="polite">Cross‑check community claims with official sources • Daily digest • Evidence capture</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn run" id="runBtn">▶ Run</button>
+      <button class="btn" id="saveDigestBtn" title="Export daily digest JSON">Export Digest</button>
+      <button class="btn save" id="saveEvidenceBtn" title="Export evidence JSON">Export Evidence</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- TABS -->
+  <div class="tabs" role="tablist" aria-label="Dashboard tabs">
+    <button class="tab-btn" role="tab" aria-selected="true" data-tab="dash">Dashboard</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="official">Official</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="community">Community</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="space">Space‑Weather</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="digest">Daily Digest</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="evidence">Evidence</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="about">About</button>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section id="dash" class="section active" aria-labelledby="dash">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Quick Stats</h2>
+        <div class="body grid">
+          <div class="card" style="grid-column:span 6">
+            <div class="body">
+              <div class="badge">Official today</div>
+              <h3 id="statOfficial" style="margin:.4rem 0 0 0">0</h3>
+              <div class="chips" id="statOfficialBreak"></div>
+            </div>
+          </div>
+          <div class="card" style="grid-column:span 6">
+            <div class="body">
+              <div class="badge">Community today</div>
+              <h3 id="statCommunity" style="margin:.4rem 0 0 0">0</h3>
+              <div class="chips" id="statCommunityBreak"></div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column:span 12">
+            <div class="body">
+              <div class="badge">Kp Index</div>
+              <div id="kpSummary" class="small helper">Awaiting data…</div>
+              <div id="kpSpark" class="small code" style="margin-top:.5rem;white-space:pre-wrap"></div>
+              <div class="helper">Source: NOAA SWPC JSON feeds (Kp/planetary index). [5](https://orcasia.org/article/1239/brics-expansion)</div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column:span 12">
+            <div class="body">
+              <div class="badge">Today’s Highlights</div>
+              <ul class="items" id="highlights"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OFFICIAL ===== -->
+  <section id="official" class="section" aria-labelledby="official">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Official Feeds • AARO • NASA • FAA • NOAA/USGS</h2>
+        <div class="body">
+          <div class="alert">
+            <strong>Note:</strong> AARO and FAA pages don’t expose public JSON APIs; this app uses a proxy to read page titles/dates for situational awareness. Confirm details with primary sources.
+          </div>
+          <ul class="items" id="officialList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMMUNITY ===== -->
+  <section id="community" class="section" aria-labelledby="community">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Community Signals • X / Reddit / YouTube / Podcasts</h2>
+        <div class="body">
+          <div class="helper">
+            Reddit JSON is public; YouTube is parsed via RSS through a proxy. For X/Twitter, provide your own server‑side key if you want deeper integration.
+          </div>
+          <ul class="items" id="communityList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SPACE-WEATHER ===== -->
+  <section id="space" class="section" aria-labelledby="space">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Space‑Weather • Kp / Geomagnetism Context</h2>
+        <div class="body">
+          <div class="input-row">
+            <div class="col-4">
+              <label for="kpThreshold">Kp Alert Threshold</label>
+              <input type="number" id="kpThreshold" min="0" max="9" value="8" />
+              <div class="helper">Cells flag as “hot” when Kp ≥ threshold.</div>
+            </div>
+            <div class="col-8">
+              <div class="alert good">
+                NOAA SWPC Kp JSON feeds are used to provide a quick context for sky reports. During **G4/G5** events, visual aurora and “mystery sky lights” spike—always cross‑check! [8](https://geopoliticaleconomy.com/2024/12/25/brics-expands-9-partner-countries-population-economy/)
+              </div>
+            </div>
+          </div>
+          <div class="hr"></div>
+          <table id="kpTable" aria-label="Recent Kp values">
+            <thead><tr><th>Time (UTC)</th><th>Kp</th><th>Source</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DAILY DIGEST ===== -->
+  <section id="digest" class="section" aria-labelledby="digest">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Daily Digest (UTC)</h2>
+        <div class="body">
+          <div class="input-row">
+            <div class="col-3">
+              <label for="digestDate">Digest Date (UTC)</label>
+              <input type="date" id="digestDate" />
+            </div>
+            <div class="col-9">
+              <div class="helper">Set date and click <kbd>Run</kbd> to auto‑recount for today. You can export JSON with “Export Digest”.</div>
+            </div>
+          </div>
+          <div class="hr"></div>
+          <div class="grid">
+            <div class="card" style="grid-column:span 6">
+              <div class="body">
+                <h3>Official</h3>
+                <ul class="items" id="digestOfficial"></ul>
+              </div>
+            </div>
+            <div class="card" style="grid-column:span 6">
+              <div class="body">
+                <h3>Community</h3>
+                <ul class="items" id="digestCommunity"></ul>
+              </div>
+            </div>
+          </div>
+          <div class="hr"></div>
+          <div class="alert">Tip: Use highlights on the Dashboard to draft your end‑of‑day wind‑up post.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EVIDENCE ===== -->
+  <section id="evidence" class="section" aria-labelledby="evidence">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>Evidence Capture (for your own observations)</h2>
+        <div class="body">
+          <div class="input-row">
+            <div class="col-4"><label>Event ID</label><input id="ev_id" type="text" placeholder="YYYYMMDD‑LOC‑NN" /></div>
+            <div class="col-4"><label>Start (UTC)</label><input id="ev_start" type="datetime-local" /></div>
+            <div class="col-4"><label>End (UTC)</label><input id="ev_end" type="datetime-local" /></div>
+
+            <div class="col-6"><label>Location (text)</label><input id="ev_loc" type="text" placeholder="Annapolis, MD – Severn River Overlook" /></div>
+            <div class="col-2"><label>Lat</label><input id="ev_lat" type="number" step="0.000001" /></div>
+            <div class="col-2"><label>Lon</label><input id="ev_lon" type="number" step="0.000001" /></div>
+            <div class="col-2"><label>Alt (m)</label><input id="ev_alt" type="number" step="1" /></div>
+
+            <div class="col-6"><label>Weather</label><input id="ev_weather" type="text" placeholder="Clear, 3°C, light wind; vis 10km" /></div>
+            <div class="col-3"><label>Kp at Event</label><input id="ev_kp" type="number" step="0.1" /></div>
+            <div class="col-3"><label>SYM‑H/Dst (nT)</label><input id="ev_symh" type="number" step="1" /></div>
+
+            <div class="col-3"><label>Camera Make</label><input id="cam_make" type="text" /></div>
+            <div class="col-3"><label>Camera Model</label><input id="cam_model" type="text" /></div>
+            <div class="col-3"><label>Lens</label><input id="cam_lens" type="text" placeholder="20mm f/1.8" /></div>
+            <div class="col-3"><label>Sensor</label><input id="cam_sensor" type="text" placeholder="IMX585 / Full‑frame" /></div>
+
+            <div class="col-3"><label>Focal (mm)</label><input id="cam_focal" type="number" step="0.1" /></div>
+            <div class="col-3"><label>Shutter (s)</label><input id="cam_shutter" type="number" step="0.001" /></div>
+            <div class="col-3"><label>Aperture (f/)</label><input id="cam_aperture" type="number" step="0.1" /></div>
+            <div class="col-3"><label>ISO</label><input id="cam_iso" type="number" step="1" /></div>
+
+            <div class="col-12"><label>Files/Paths (RAW, video, audio, RF logs, ADS‑B snapshot, satellite refs, calibration frames)</label>
+              <textarea id="ev_files" placeholder="/media/2026‑01‑16/raw/..., /media/..../adsb‑snapshot.json, /media/..../rf‑log.csv"></textarea>
+            </div>
+            <div class="col-12"><label>Witnesses</label><input id="ev_witnesses" type="text" placeholder="Name <email>, Name <email>" /></div>
+            <div class="col-12"><label>Narrative</label><textarea id="ev_narrative" placeholder="What you saw; sequence of events; sensor settings; anomalies; cross‑checks."></textarea></div>
+            <div class="col-12"><label>Observed Behavior</label><textarea id="ev_behavior" placeholder="Hover/accelerate/turn/etc."></textarea></div>
+            <div class="col-12"><label>Effects</label><textarea id="ev_effects" placeholder="Sound/EM effects; animal behavior; infrastructure context."></textarea></div>
+            <div class="col-12"><label>Hypotheses & Cross‑Checks</label><textarea id="ev_checks" placeholder="Starlink flare? aircraft? balloon? drone? Tracked with Stellarium/adsb/satpass; residual anomalies."></textarea></div>
+            <div class="col-12"><label>Chain of Custody & File Hashes</label><textarea id="ev_coc" placeholder="Who handled; when; SHA‑256 hashes: file → hash"></textarea></div>
+          </div>
+          <div class="hr"></div>
+          <div class="alert warn">
+            Reminder: Never aim lasers at aircraft (18 U.S.C. § 39A). RF transmit requires FCC Part 97 licensing; keep this receive‑only. [6](https://researchbriefings.files.parliament.uk/documents/CBP-10136/CBP-10136.pdf)[7](https://www.nbcolympics.com/news/how-watch-2026-milan-cortina-winter-olympics-tv-and-stream-info-schedule)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="section" aria-labelledby="about">
+    <div class="grid" style="margin-top:1rem">
+      <div class="card" style="grid-column:span 12">
+        <h2>About & Sources</h2>
+        <div class="body">
+          <p>This tool is designed to help you **compare community claims with official releases**, add **space‑weather context**, log a **daily digest**, and capture **forensic‑quality evidence**.</p>
+          <ul>
+            <li>AARO FY24 consolidated report (method & stats) and historical review: <a href="https://media.defense.gov/2024/Nov/14/2003583603/-1/-1/0/FY24-CONSOLIDATED-ANNUAL-REPORT-ON-UAP-508.PDF" target="_blank" rel="noreferrer">DoD PDF</a> • <a href="https://www.aaro.mil/" target="_blank" rel="noreferrer">aaro.mil</on-record-as-ocean-heat-surges/)[9](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml)</li>
+            <li>NASA UAP study & recommendations: <a href="https://www.nasa.gov/news-release/update-nasa-shares-uap-independent-study-report-names-director/" target="_blank" rel="noreferrer">NASA</a> [3](https://wmo.int/publication-series/wmo-global-annual-decadal-climate-update-2025-2029)</li>
+            <li>FAA controller notice (UAP terminology): <a href="https://www.faa.gov/regulations_policies/orders_notices/index.cfm/go/document.information/documentID/1044304" target="_blank" rel="noreferrer">FAA Notice</a> [4](https://www.nasa.gov/news-release/nasa-releases-global-temperature-data/)</li>
+            <li>NOAA SWPC Kp JSON (planetary K‑index): <a href="https://www.ncei.noaa.gov/products/geomagnetic-indices" target="_blank" rel="noreferrer">NCEI/Indices</a> • SWPC services JSON endpoints [5](https://orcasia.org/article/1239/brics-expansion)</li>
+            <li>Law: 18 U.S.C. § 39A (laser at aircraft); FCC Part 97 (Amateur Radio). [6](https://researchbriefings.files.parliament.uk/documents/CBP-10136/CBP-10136.pdf)[7](https://www.nbcolympics.com/news/how-watch-2026-milan-cortina-winter-olympics-tv-and-stream-info-schedule)</li>
+          </ul>
+          <p class="small">This UI uses a public proxy for HTML/RSS demo reads. For reliability, deploy your own small proxy (Cloudflare Worker/Netlify Function) and replace <code class="code">PROXY()</code> in the script.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="container">
+  <div class="hr"></div>
+  <div class="small">© 2026 • Built for Thomas • Local‑first, privacy‑respecting. Press <kbd>R</kbd> to Run.</div>
+</footer>
+
+<!-- ====== APP SCRIPT ====== -->
+<script>
+/* ===========================
+   CONFIG & FEEDS
+   =========================== */
+
+// --- Official feeds ---
+// AARO (HTML, via proxy), NASA (UAP page), FAA Notice (HTML), NOAA Kp JSON
+const FEEDS = {
+  official: [
+    { id:"aaro_home", label:"AARO – Home", type:"Other", url:"https://www.aaro.mil/", parser:"html" },
+    { id:"aaro_fy24", label:"AARO – FY24 UAP Consolidated Report", type:"Report",
+      url:"https://media.defense.gov/2024/Nov/14/2003583603/-1/-1/0/FY24-CONSOLIDATED-ANNUAL-REPORT-ON-UAP-508.PDF", parser:"pdf" },
+    { id:"nasa_uap", label:"NASA UAP Independent Study Report (2023)", type:"Report",
+      url:"https://www.nasa.gov/news-release/update-nasa-shares-uap-independent-study-report-names-director/", parser:"html" },
+    { id:"faa_uap_notice", label:"FAA – UAP Notice/Controller Guidance", type:"Notice",
+      url:"https://www.faa.gov/regulations_policies/orders_notices/index.cfm/go/document.information/documentID/1044304", parser:"html" }
+  ],
+  // --- Community feeds ---
+  community: [
+    // Reddit JSON (public)
+    { id:"reddit_ufo", label:"Reddit r/UFOs (new)", platform:"Reddit", claim:"UAP",
+      url:"https://www.reddit.com/r/UFOs/new.json?limit=12", parser:"reddit" },
+    { id:"reddit_uap", label:"Reddit r/UAP (new)", platform:"Reddit", claim:"UAP",
+      url:"https://www.reddit.com/r/UAP/new.json?limit=12", parser:"reddit" },
+    { id:"reddit_hs",  label:"Reddit r/HighStrangeness (new)", platform:"Reddit", claim:"Supernatural",
+      url:"https://www.reddit.com/r/HighStrangeness/new.json?limit=12", parser:"reddit" },
+    { id:"reddit_par", label:"Reddit r/Paranormal (new)", platform:"Reddit", claim:"Supernatural",
+      url:"https://www.reddit.com/r/Paranormal/new.json?limit=12", parser:"reddit" },
+    // YouTube RSS example channels (replace with your faves)
+    // RSS → via proxy so we can parse in browser
+    // Americans for Safe Aerospace (example channel ID; replace as needed)
+    { id:"yt_asa", label:"YouTube – ASA (RSS)", platform:"YouTube", claim:"UAP",
+      url:"https://www.youtube.com/feeds/videos.xml?channel_id=UCa9r7EJ2w-DC2G6sY9pYUGA", parser:"rss" },
+    // The Debrief (news, tech & UAP adjacent)
+    { id:"yt_debrief", label:"YouTube – The Debrief (RSS)", platform:"YouTube", claim:"UAP",
+      url:"https://www.youtube.com/feeds/videos.xml?channel_id=UCtOGGZBj4yJJHkjwTKY6ZIA", parser:"rss" }
+  ],
+  // NOAA SWPC Kp JSON (stable product feed)
+  // Example: https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json
+  kp_json: "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+};
+
+// Storage keys
+const STORE = {
+  official: "uap_official_rows",
+  community: "uap_community_rows",
+  kp: "uap_kp_rows",
+  evidence: "uap_evidence"
+};
+
+// Simple util: format date/time
+const fmt = {
+  date(d){ return new Date(d).toISOString().slice(0,10); },
+  dt(d){ return new Date(d).toISOString().replace('T',' ').slice(0,16) + "Z"; }
+};
+
+// Proxy helper for HTML/RSS demo (public)
+const PROXY = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+// Fetch JSON helper
+async function getJSON(url){
+  const r = await fetch(url, {cache:"no-store"});
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+// Fetch text helper (with proxy by default)
+async function getTextViaProxy(url){
+  const r = await fetch(PROXY(url), {cache:"no-store"});
+  if(!r.ok) throw new Error(`Proxy HTTP ${r.status}`);
+  return r.text();
+}
+
+/* ===========================
+   STATE
+   =========================== */
+let state = {
+  official: [],
+  community: [],
+  kp: [],
+  digestDateUTC: new Date().toISOString().slice(0,10)
+};
+
+// Load from localStorage
+function loadState(){
+  try{
+    state.official = JSON.parse(localStorage.getItem(STORE.official) || "[]");
+    state.community = JSON.parse(localStorage.getItem(STORE.community) || "[]");
+    state.kp = JSON.parse(localStorage.getItem(STORE.kp) || "[]");
+  }catch(e){}
+}
+
+// Save to localStorage
+function saveState(){
+  localStorage.setItem(STORE.official, JSON.stringify(state.official));
+  localStorage.setItem(STORE.community, JSON.stringify(state.community));
+  localStorage.setItem(STORE.kp, JSON.stringify(state.kp));
+}
+
+/* ===========================
+   PARSERS
+   =========================== */
+
+// OFFICIAL: very light HTML title/date scraping for AARO/NASA/FAA
+function parseOfficialHTML(html, feed){
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const title = (doc.querySelector("title")?.textContent || feed.label).trim();
+  let date = doc.querySelector('meta[property="article:published_time"], time, .date, .published, .metadata time')?.getAttribute("datetime")
+          || doc.querySelector('time')?.textContent || "";
+  date = (date||"").slice(0,10);
+  const item = {
+    id: `${feed.id}_${Date.now()}`,
+    date: date || fmt.date(new Date()),
+    source: labelToSource(feed.label),
+    url: feed.url,
+    title: title,
+    summary: feed.label,
+    type: feed.type || "Other",
+    confidence: "Med",
+    status: "Investigating"
+  };
+  return item;
+}
+
+function labelToSource(label){
+  if(label.includes("AARO")) return "AARO";
+  if(label.includes("NASA")) return "NASA";
+  if(label.includes("FAA")) return "FAA";
+  if(label.includes("USGS")||label.includes("NOAA")) return "NOAA";
+  return "Other";
+}
+
+// COMMUNITY: reddit JSON
+function parseReddit(json, feed){
+  const out = [];
+  const arr = json?.data?.children || [];
+  for(const it of arr){
+    const p = it.data;
+    out.push({
+      id: `rd_${p.id}`,
+      datetime: fmt.dt(p.created_utc*1000),
+      platform: "Reddit",
+      handle: `u/${p.author}`,
+      url: `https://www.reddit.com${p.permalink}`,
+      claim: feed.claim || "UAP",
+      summary: p.title,
+      evidence: guessEvidenceFromTitle(p.title),
+      region: "",
+      location: "",
+      lat: "", lon:"",
+      tags: p.link_flair_text || "",
+      duplicate_key: p.url || p.permalink,
+      assessment: "Insufficient",
+      official_links: "",
+      status: "Open",
+      notes: ""
+    });
+  }
+  return out;
+}
+
+// COMMUNITY: RSS (YouTube Channels → RSS)
+function parseRSS(xmlText, feed){
+  const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+  const entries = [...doc.querySelectorAll("entry, item")];
+  return entries.slice(0,12).map((e,i)=>{
+    const title = e.querySelector("title")?.textContent?.trim() || feed.label;
+    const link = e.querySelector("link")?.getAttribute("href") || e.querySelector("link")?.textContent || feed.url;
+    const published = e.querySelector("published, pubDate")?.textContent || "";
+    return {
+      id:`rss_${feed.id}_${i}`,
+      datetime: fmt.dt(published||Date.now()),
+      platform: feed.platform || "YouTube",
+      handle: feed.label,
+      url: link,
+      claim: feed.claim || "UAP",
+      summary: title,
+      evidence: "Video",
+      region:"", location:"", lat:"", lon:"",
+      tags:"", duplicate_key: link, assessment:"Insufficient",
+      official_links:"", status:"Open", notes:""
+    }
+  });
+}
+
+function guessEvidenceFromTitle(t=""){
+  t=t.toLowerCase();
+  if(t.includes("video")||t.includes("footage")||t.includes("watch")) return "Video";
+  if(t.includes("photo")||t.includes("image")||t.includes("pic")) return "Photo";
+  if(t.includes("document")||t.includes("leak")||t.includes("report")) return "Document";
+  return "Other";
+}
+
+/* ===========================
+   FETCHERS (Run)
+   =========================== */
+
+async function runAll(){
+  setRunStatus(true);
+  try{
+    // 1) OFFICIAL
+    const officialItems = [];
+    for(const f of FEEDS.official){
+      if(f.parser==="html"){
+        const html = await getTextViaProxy(f.url);
+        officialItems.push( parseOfficialHTML(html, f) );
+      }else if(f.parser==="pdf"){
+        // For PDFs, we just log a record with today's date & title
+        officialItems.push({
+          id: `${f.id}_${Date.now()}`,
+          date: fmt.date(new Date()),
+          source: labelToSource(f.label),
+          url: f.url,
+          title: f.label,
+          summary: f.label,
+          type: f.type || "Report",
+          confidence:"High",
+          status:"Investigating"
+        });
+      }
+    }
+    // Merge (de‑dupe by URL)
+    state.official = mergeByURL([...officialItems, ...state.official], "url");
+
+    // 2) COMMUNITY
+    const communityItems = [];
+    for(const f of FEEDS.community){
+      if(f.parser==="reddit"){
+        try{
+          const json = await getJSON(f.url);
+          communityItems.push(...parseReddit(json,f));
+        }catch(e){
+          console.warn("Reddit fetch failed", f.url, e);
+        }
+      }else if(f.parser==="rss"){
+        try{
+          const xml = await getTextViaProxy(f.url);
+          communityItems.push(...parseRSS(xml,f));
+        }catch(e){
+          console.warn("RSS fetch failed", f.url, e);
+        }
+      }
+    }
+    state.community = mergeByURL([...communityItems, ...state.community], "url");
+
+    // 3) NOAA SWPC Kp
+    try{
+      const kpArr = await getJSON(FEEDS.kp_json);
+      // Format: first row is header; rest are [time, Kp]
+      const rows = kpArr.slice(1).slice(-24).map(r=>({ time:r[0], kp: Number(r[1]), src: "NOAA SWPC" }));
+      state.kp = rows;
+    }catch(e){
+      console.warn("Kp JSON fetch failed", e);
+    }
+
+    // Persist and re‑render
+    saveState();
+    updateUI();
+
+    // Focus highlights
+    focusHighlights();
+  }catch(e){
+    console.error(e);
+    alert("Run failed. See console for details.");
+  }finally{
+    setRunStatus(false);
+  }
+}
+
+function mergeByURL(items, key="url"){
+  const seen = new Set();
+  const out = [];
+  for(const it of items){
+    const k = it[key];
+    if(!k || !seen.has(k)){ out.push(it); if(k) seen.add(k); }
+  }
+  // Newest first
+  return out.sort((a,b)=> (b.date||b.datetime||"").localeCompare(a.date||a.datetime||""));
+}
+
+/* ===========================
+   UI BINDINGS
+   =========================== */
+
+function updateUI(){
+  document.getElementById("digestDate").value = state.digestDateUTC;
+
+  // Quick stats
+  const today = state.digestDateUTC;
+  const offToday = state.official.filter(o=> (o.date||"").startsWith(today));
+  const comToday = state.community.filter(c=> (c.datetime||"").startsWith(today));
+  document.getElementById("statOfficial").textContent = offToday.length;
+  document.getElementById("statCommunity").textContent = comToday.length;
+  // breakdown chips
+  renderChips("statOfficialBreak", countBy(offToday, "type"));
+  renderChips("statCommunityBreak", countBy(comToday, "platform"));
+
+  // Kp summary & table
+  renderKp();
+
+  // Official list
+  renderList("officialList", state.official.map(o=>({
+    title:o.title, url:o.url,
+    meta:`${o.date} • ${o.source} • ${o.type}`,
+    chips:[o.confidence||"Med", o.status||"Investigating"]
+  })));
+
+  // Community list
+  renderList("communityList", state.community.map(c=>({
+    title:c.summary, url:c.url,
+    meta:`${c.datetime} • ${c.platform} • ${c.claim} • ${c.handle}`,
+    chips:[c.evidence||"Other", c.assessment||"Insufficient"]
+  })));
+
+  // Highlights (top 5 official + top 5 community today)
+  renderHighlights();
+
+  // Digest lists
+  renderDigest(today);
+}
+
+function renderChips(elId, obj){
+  const el = document.getElementById(elId);
+  el.innerHTML = "";
+  Object.entries(obj).forEach(([k,v])=>{
+    const span = document.createElement("span");
+    span.className="chip"; span.textContent=`${k}: ${v}`;
+    el.appendChild(span);
+  });
+}
+function countBy(arr, key){
+  const m={}; arr.forEach(o=>{ const k=(o[key]||"Other"); m[k]=(m[k]||0)+1; }); return m;
+}
+
+function renderList(elId, rows){
+  const el = document.getElementById(elId);
+  el.innerHTML = "";
+  rows.slice(0,60).forEach(r=>{
+    const li = document.createElement("li");
+    li.className="item";
+    li.innerHTML = `
+      <a href="${r.url}" target="_blank" rel="noreferrer">${escapeHtml(r.title)}</a>
+      <div class="meta">${escapeHtml(r.meta||"")}</div>
+      <div class="chips">${(r.chips||[]).map(c=>`<span class="chip">${escapeHtml(c)}</span>`).join(" ")}</div>
+    `;
+    el.appendChild(li);
+  });
+}
+
+function renderHighlights(){
+  const el = document.getElementById("highlights");
+  el.innerHTML = "";
+  const today = state.digestDateUTC;
+  const topOff = state.official.filter(o=> (o.date||"").startsWith(today)).slice(0,5);
+  const topCom = state.community.filter(c=> (c.datetime||"").startsWith(today)).slice(0,5);
+  [...topOff, ...topCom].forEach(x=>{
+    const li = document.createElement("li");
+    li.className="item";
+    const title = x.title || x.summary;
+    const meta = x.source ? `${x.date} • ${x.source}` : `${x.datetime} • ${x.platform}`;
+    li.innerHTML = `
+      <a href="${x.url}" target="_blank" rel="noreferrer">${escapeHtml(title)}</a>
+      <div class="meta">${escapeHtml(meta)}</div>
+    `;
+    el.appendChild(li);
+  });
+}
+
+function renderKp(){
+  const kpThr = Number(document.getElementById("kpThreshold").value || 8);
+  const kp = state.kp || [];
+  // Summary sparkline
+  const spark = kp.slice(-24).map(v=>v.kp).map(n=>{
+    if(n>=kpThr+1) return "█";
+    if(n>=kpThr) return "▓";
+    if(n>=kpThr-1) return "▒";
+    return "·";
+  }).join("");
+  const summary = kp.length
+    ? `Last ${kp.slice(-1)[0].time}: Kp=${kp.slice(-1)[0].kp}`
+    : "Awaiting Kp data";
+
+  document.getElementById("kpSummary").textContent = summary;
+  document.getElementById("kpSpark").textContent = spark;
+
+  // Table
+  const tb = document.querySelector("#kpTable tbody");
+  tb.innerHTML = "";
+  kp.slice().reverse().forEach(row=>{
+    const tr = document.createElement("tr");
+    const cls = row.kp>=kpThr+1 ? "veryhot" : row.kp>=kpThr ? "hot" : "";
+    tr.innerHTML = `
+      <td>${escapeHtml(row.time)}</td>
+      <td class="kp ${cls}">${row.kp.toFixed(1)}</td>
+      <td>${escapeHtml(row.src)}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+
+function renderDigest(date){
+  const offToday = state.official.filter(o=> (o.date||"").startsWith(date));
+  const comToday = state.community.filter(c=> (c.datetime||"").startsWith(date));
+  const offCounts = countBy(offToday, "type");
+  const comPlat = countBy(comToday, "platform");
+  const comClaim = countBy(comToday, "claim");
+
+  const offEl = document.getElementById("digestOfficial");
+  offEl.innerHTML = "";
+  Object.entries(offCounts).forEach(([k,v])=>{
+    const li = document.createElement("li"); li.className="item";
+    li.innerHTML = `<div class="meta">${date}</div><strong>${k}</strong>: ${v}`;
+    offEl.appendChild(li);
+  });
+
+  const comEl = document.getElementById("digestCommunity");
+  comEl.innerHTML = "";
+  const lines = {...comPlat, ...comClaim};
+  Object.entries(lines).forEach(([k,v])=>{
+    const li = document.createElement("li"); li.className="item";
+    li.innerHTML = `<div class="meta">${date}</div><strong>${k}</strong>: ${v}`;
+    comEl.appendChild(li);
+  });
+}
+
+function setRunStatus(running){
+  const btn = document.getElementById("runBtn");
+  btn.disabled = running;
+  btn.textContent = running ? "Running…" : "▶ Run";
+}
+
+/* ===========================
+   EXPORTS
+   =========================== */
+
+function exportJSON(filename, data){
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportDigest(){
+  const date = document.getElementById("digestDate").value || state.digestDateUTC;
+  const data = {
+    date_utc: date,
+    official_today: state.official.filter(o=> (o.date||"").startsWith(date)),
+    community_today: state.community.filter(c=> (c.datetime||"").startsWith(date)),
+    kp_recent: state.kp
+  };
+  exportJSON(`digest_${date}.json`, data);
+}
+
+function exportEvidence(){
+  const ev = {
+    event_id: g("ev_id"),
+    datetime_utc_start: dtval("ev_start"),
+    datetime_utc_end: dtval("ev_end"),
+    location: { description:g("ev_loc"), lat: num("ev_lat"), lon: num("ev_lon"), alt_m: num("ev_alt") },
+    weather: g("ev_weather"),
+    space_weather: { kp: num("ev_kp"), symh_dst_nt: num("ev_symh") },
+    camera: {
+      make:g("cam_make"), model:g("cam_model"),
+      sensor:g("cam_sensor"), lens:g("cam_lens"),
+      focal_mm: num("cam_focal"), shutter_s:num("cam_shutter"),
+      aperture_f:num("cam_aperture"), iso:num("cam_iso"), format:"RAW/Video"
+    },
+    files:{
+      raw: g("ev_files")
+    },
+    witnesses: (g("ev_witnesses")||"").split(",").map(s=>s.trim()).filter(Boolean),
+    narrative: g("ev_narrative"),
+    observed_behavior: g("ev_behavior"),
+    effects: g("ev_effects"),
+    initial_hypotheses: g("ev_checks"),
+    cross_checks: g("ev_checks"),
+    residual_anomalies: "",
+    chain_of_custody: (g("ev_coc")||"").split("\n").map(s=>s.trim()).filter(Boolean),
+    hashes: [],
+    consent_obtained: false,
+    reported_to: "",
+    case_status: "Open"
+  };
+  localStorage.setItem(STORE.evidence, JSON.stringify(ev));
+  exportJSON(`${ev.event_id||"evidence"}.json`, ev);
+}
+
+/* ===========================
+   HELPERS
+   =========================== */
+function g(id){ return document.getElementById(id).value.trim(); }
+function num(id){ const v=Number(document.getElementById(id).value); return isFinite(v)?v:undefined; }
+function dtval(id){
+  const v = document.getElementById(id).value; if(!v) return undefined;
+  // Convert local datetime-local to UTC ISO
+  const d = new Date(v); return d.toISOString();
+}
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+function focusHighlights(){
+  document.querySelector('[data-tab="dash"]').click();
+  document.getElementById("highlights")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ===========================
+   EVENTS
+   =========================== */
+
+document.getElementById("runBtn").addEventListener("click", runAll);
+document.getElementById("saveDigestBtn").addEventListener("click", exportDigest);
+document.getElementById("saveEvidenceBtn").addEventListener("click", exportEvidence);
+document.getElementById("digestDate").addEventListener("change", e=>{
+  state.digestDateUTC = e.target.value;
+  updateUI();
+});
+document.getElementById("kpThreshold").addEventListener("change", renderKp);
+
+// tab switching
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.setAttribute("aria-selected","false"));
+    btn.setAttribute("aria-selected","true");
+    const tab = btn.dataset.tab;
+    document.querySelectorAll(".section").forEach(s=> s.classList.remove("active"));
+    document.getElementById(tab).classList.add("active");
+  });
+});
+
+// Keyboard: R runs
+document.addEventListener("keydown", (e)=>{
+  if(e.key.toLowerCase()==="r" && !e.metaKey && !e.ctrlKey){
+    e.preventDefault(); runAll();
+  }
+});
+
+// Init
+(function init(){
+  loadState();
+  state.digestDateUTC = new Date().toISOString().slice(0,10);
+  updateUI();
+})();
+</script>
+</body>
+</html>
+
