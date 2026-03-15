@@ -1,0 +1,10 @@
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager\App.baml
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager\MainWindow.baml
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager\App.g.cs
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager\MainWindow.g.cs
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager_MarkupCompile.cache
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager.g.resources
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager.AssemblyInfoInputs.cache
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager.AssemblyInfo.cs
+D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\NorthwindOrdersManager.csproj.CoreCompileInputs.cache
