@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Tommy\Year2_Semester2\C#\NorthwindOrdersManager\NorthwindOrdersManager\obj\Debug\net6.0-windows\
+/home/runner/work/C_Sharp_Training/C_Sharp_Training/NorthwindOrdersManager/obj/Debug/net6.0-windows/
 NorthwindOrdersManager
 none
 false
-TRACE;DEBUG;NET;NET6_0;NETCOREAPP
+TRACE;DEBUG;NET;NET6_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 
-2298505390
+2-366187090
 
-31894749453
-194-1317296222
-NorthwindOrdersManager\App.xaml;NorthwindOrdersManager\MainWindow.xaml;
+3-1160613882
+195-1112822545
+NorthwindOrdersManager/App.xaml;NorthwindOrdersManager/MainWindow.xaml;
 
 False
 

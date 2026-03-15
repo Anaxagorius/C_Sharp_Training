@@ -5,5 +5,11 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>NorthwindOrdersManager</RootNamespace>
     <AssemblyName>NorthwindOrdersManager</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
+  </ItemGroup>
 </Project>
